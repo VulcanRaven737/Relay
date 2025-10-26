@@ -1,8 +1,6 @@
-# Relay - EV Charging Network Platform
+# Relay 
 
-A comprehensive EV charging station management platform built with Next.js 14, TypeScript, Tailwind CSS, and Supabase.
-
-## 🚀 Features Implemented
+## Features Implemented
 
 ### 1. **User Management** 
 **Tables Used:** `user_account`, `vehicle`
@@ -98,49 +96,7 @@ A comprehensive EV charging station management platform built with Next.js 14, T
 - Maintenance schedules
 - Real-time status updates
 
-## 📊 Database Schema
-
-### Tables
-- `user_account` - User information
-- `vehicle` - User vehicles
-- `charging_station` - Charging station details
-- `charging_port` - Individual charging ports
-- `charging_session` - Charging sessions (with trigger-calculated fields)
-- `payment` - Payment records
-- `review` - Station reviews and ratings
-- `maintenance_log` - Maintenance tracking
-- `port_status_log` - Port status history (auto-populated by trigger)
-
-### Database Functions
-1. **calculateusertotalspending(user_id_input integer)** 
-   - Returns total spending for a user
-   - Used in Analytics Dashboard
-
-2. **getstationrevenue(station_id_input integer, start_date timestamp, end_date timestamp)**
-   - Returns revenue for a station in date range
-   - Used in Admin Dashboard
-
-### Database Triggers
-1. **before_session_end** (on `charging_session`)
-   - Automatically calculates session duration and cost when end_time is set
-   - Ensures data consistency
-
-2. **after_port_status_update** (on `charging_port`)
-   - Automatically logs all port status changes to `port_status_log`
-   - Maintains complete audit trail
-
-## 🛠️ Tech Stack
-
-- **Framework:** Next.js 14 (App Router)
-- **Language:** TypeScript
-- **Styling:** Tailwind CSS
-- **Database:** Supabase (PostgreSQL)
-- **UI Components:** Custom React components
-- **Date Handling:** date-fns
-- **Charts:** Recharts (for analytics)
-- **Maps:** Leaflet & React-Leaflet (for station finder)
-
-## 📁 Project Structure
+## Project Structure
 
 ```
 Relay/
@@ -202,7 +158,7 @@ Relay/
 └── tsconfig.json                 # TypeScript configuration
 ```
 
-## 🚦 Setup Instructions
+## Setup Instructions
 
 ### 1. Install Dependencies
 
@@ -241,116 +197,3 @@ Visit `http://localhost:3000` to see the application.
 npm run build
 npm start
 ```
-
-## 🔑 Key API Endpoints
-
-### User & Vehicles
-- `GET /api/vehicles` - Get user vehicles
-- `POST /api/vehicles` - Register new vehicle
-
-### Stations
-- `GET /api/stations` - Get all stations with filters
-- `POST /api/stations` - Create new station (admin)
-
-### Sessions
-- `GET /api/sessions` - Get user sessions
-- `POST /api/sessions` - Start new session
-- `POST /api/sessions/[id]/end` - End session
-
-### Payments
-- `GET /api/payments` - Get payment history
-
-### Reviews
-- `GET /api/reviews` - Get all reviews
-- `POST /api/reviews` - Submit review
-
-### Analytics
-- `GET /api/analytics/user` - Get user analytics (uses calculateusertotalspending)
-
-### Admin
-- `GET /api/admin/dashboard` - Get admin dashboard data (uses getstationrevenue)
-
-## 🎯 Database Function Usage Examples
-
-### User Total Spending
-```typescript
-const { data } = await supabase.rpc('calculateusertotalspending', {
-  user_id_input: 1
-})
-// Returns: total amount spent by user
-```
-
-### Station Revenue
-```typescript
-const { data } = await supabase.rpc('getstationrevenue', {
-  station_id_input: 1,
-  start_date: '2025-01-01',
-  end_date: '2025-01-31'
-})
-// Returns: total revenue for station in date range
-```
-
-## 🔄 Trigger Behavior
-
-### Session End Trigger
-When updating a session's `end_time`:
-```typescript
-await supabase
-  .from('charging_session')
-  .update({ end_time: new Date().toISOString() })
-  .eq('session_id', sessionId)
-// Trigger automatically calculates and sets: duration, energy_consumed, cost
-```
-
-### Port Status Trigger
-When updating a port's status:
-```typescript
-await supabase
-  .from('charging_port')
-  .update({ status: 'In-Use' })
-  .eq('port_id', portId)
-// Trigger automatically logs the change to port_status_log table
-```
-
-## 📱 Features by Page
-
-| Page | Features | Tables Used |
-|------|----------|-------------|
-| Home | Landing page, feature overview | None |
-| Login/Register | Authentication | `user_account` |
-| Stations | Find stations, filter, view details | `charging_station`, `charging_port`, `review` |
-| Sessions | Start/end sessions, view history | `charging_session`, `charging_port`, `vehicle` |
-| Vehicles | Register/manage vehicles | `vehicle` |
-| Payments | View history, pay pending | `payment`, `charging_session` |
-| Reviews | Submit/view reviews | `review`, `charging_station` |
-| Analytics | User statistics, spending analysis | All + DB functions |
-| Admin | Manage stations, maintenance, revenue | All tables + DB functions |
-
-## 🔒 Security Notes
-
-- All API routes currently use a hardcoded `userId = 1` for demonstration
-- In production, implement proper authentication using Supabase Auth
-- Add Row Level Security (RLS) policies in Supabase
-- Validate user permissions for admin routes
-- Sanitize user inputs
-
-## 🚀 Next Steps
-
-1. Implement Supabase Authentication
-2. Add Row Level Security policies
-3. Implement real-time subscriptions for live updates
-4. Add image uploads for stations
-5. Implement notifications system
-6. Add payment gateway integration
-7. Create mobile-responsive design improvements
-8. Add data export functionality
-9. Implement advanced filtering and search
-10. Add multi-language support
-
-## 📄 License
-
-This project is for educational purposes.
-
-## 👤 Author
-
-Built with Next.js, TypeScript, and Supabase for EV Charging Station Management.
