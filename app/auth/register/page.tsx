@@ -92,7 +92,7 @@ export default function RegisterPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 py-12 px-4">
       {/* Aurora Background */}
-      <div className="fixed inset-0 w-full h-full opacity-40 -z-0 pointer-events:none">
+      <div className="fixed inset-0 w-full h-full opacity-40 -z-0 pointer-events-none">
         <Aurora
           colorStops={["#3A29FF", "#FF94B4", "#FF3232"]}
           blend={0.5}
