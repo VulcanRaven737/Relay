@@ -16,8 +16,10 @@ export async function GET() {
     const totalRevenue = payments?.reduce((sum: number, p: any) => sum + parseFloat(p.amount), 0) || 0
 
     const availablePorts = ports?.filter((p: any) => p.status === 'Available').length || 0
-    const inUsePorts = ports?.filter((p: any) => p.status === 'In-Use').length || 0
-    const maintenancePorts = ports?.filter((p: any) => p.status === 'Maintenance').length || 0
+    const inUsePorts = ports?.filter((p: any) => p.status === 'In Use').length || 0
+    const outOfOrderPorts = ports?.filter((p: any) => p.status === 'Out of Order').length || 0
+    const underMaintenancePorts = ports?.filter((p: any) => p.status === 'Under Maintenance').length || 0
+    const maintenancePorts = outOfOrderPorts + underMaintenancePorts
 
     const today = new Date().toISOString().split('T')[0]
     const sessionsToday = sessions?.filter((s: any) => s.start_time?.startsWith(today)).length || 0
@@ -88,6 +90,8 @@ export async function GET() {
         availablePorts,
         inUsePorts,
         maintenancePorts,
+        outOfOrderPorts,
+        underMaintenancePorts,
         sessionsToday,
         revenueToday,
         newUsers,

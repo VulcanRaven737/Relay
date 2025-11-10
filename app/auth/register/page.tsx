@@ -22,10 +22,21 @@ export default function RegisterPage() {
     setLoading(true)
 
     try {
-      // 1. Create Supabase auth user
+      // 1. Create Supabase auth user with auto-confirm and user metadata
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email: formData.email,
         password: formData.password,
+        phone: formData.ph_no,
+        options: {
+          // Skip email confirmation for immediate login
+          emailRedirectTo: undefined,
+          // Store user metadata in Supabase Auth
+          data: {
+            full_name: formData.name,
+            phone: formData.ph_no,
+            display_name: formData.name,
+          }
+        }
       })
 
       if (authError) {
@@ -37,6 +48,15 @@ export default function RegisterPage() {
       if (!authData.user) {
         setError('Failed to create account')
         setLoading(false)
+        return
+      }
+
+      // Check if email confirmation is required
+      if (authData.session === null) {
+        setError('Please check your email to confirm your account before logging in.')
+        setLoading(false)
+        // Redirect to login page with message
+        router.push('/auth/login?message=Please check your email to confirm your account')
         return
       }
 
@@ -58,8 +78,10 @@ export default function RegisterPage() {
         return
       }
 
-      // Success - redirect to login
-      router.push('/auth/login?registered=true')
+      // Success - user is now logged in and profile created
+      // Redirect to dashboard (home page will detect auth and show dashboard)
+      router.push('/')
+      router.refresh() // Force refresh to update auth state
     } catch (err: any) {
       setError(err.message || 'An unexpected error occurred')
       setLoading(false)

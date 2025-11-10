@@ -45,8 +45,10 @@ export async function GET() {
           no_plate,
           maker_model
         ),
-        payment:payment(
-          pay_status
+        payment(
+          pay_status,
+          amount,
+          pay_method
         )
       `)
       .eq('user_id', userId)
@@ -54,13 +56,18 @@ export async function GET() {
 
     if (error) throw error
 
-    const formattedSessions = sessions?.map((session: any) => ({
-      ...session,
-      station_name: session.port?.station?.operatorname || 'Unknown',
-      vehicle_plate: session.vehicle?.no_plate || 'Unknown',
-      vehicle_model: session.vehicle?.maker_model || 'Unknown',
-      payment_status: session.payment?.[0]?.pay_status || 'Pending',
-    }))
+    const formattedSessions = sessions?.map((session: any) => {
+      // Payment is an array because of the one-to-one relationship
+      const payment = Array.isArray(session.payment) ? session.payment[0] : session.payment
+      
+      return {
+        ...session,
+        station_name: session.port?.station?.operatorname || 'Unknown',
+        vehicle_plate: session.vehicle?.no_plate || 'Unknown',
+        vehicle_model: session.vehicle?.maker_model || 'Unknown',
+        payment_status: payment?.pay_status || 'Pending',
+      }
+    })
 
     // Find active session
     const activeSession = formattedSessions?.find((s: any) => !s.end_time)
@@ -132,11 +139,25 @@ export async function POST(request: Request) {
       start_time: new Date().toISOString(),
     }
 
-    // Update port status to In-Use
-    await supabaseClient
+    // Update port status to In Use
+    const { error: portUpdateError } = await supabaseClient
       .from('charging_port')
-      .update({ status: 'In-Use' })
+      .update({ status: 'In Use' })
       .eq('port_id', body.port_id)
+
+    if (portUpdateError) {
+      console.error('Failed to update port status:', portUpdateError)
+      return NextResponse.json({ error: 'Failed to update port status' }, { status: 500 })
+    }
+
+    // Log the status change in port_status_log
+    await supabaseClient
+      .from('port_status_log')
+      .insert({
+        port_id: body.port_id,
+        old_status: 'Available',
+        new_status: 'In Use'
+      })
 
     const { data, error } = await supabaseClient
       .from('charging_session')

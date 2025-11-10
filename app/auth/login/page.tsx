@@ -1,17 +1,27 @@
 'use client'
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useState, useEffect } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { useAuth } from '@/components/AuthProvider'
 
 export default function AuthLoginPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const { login } = useAuth()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
+  const [message, setMessage] = useState('')
   const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    // Check for messages in URL params
+    const urlMessage = searchParams.get('message')
+    if (urlMessage) {
+      setMessage(urlMessage)
+    }
+  }, [searchParams])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -29,6 +39,7 @@ export default function AuthLoginPage() {
 
       // Successful login - redirect to dashboard
       router.push('/')
+      router.refresh() // Force refresh to update auth state
     } catch (err: any) {
       setError(err.message || 'An unexpected error occurred')
       setLoading(false)
@@ -46,6 +57,12 @@ export default function AuthLoginPage() {
             Access your EV charging dashboard
           </p>
         </div>
+        
+        {message && (
+          <div className="bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-400 px-4 py-3 rounded-md text-sm">
+            {message}
+          </div>
+        )}
         
         {error && (
           <div className="bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 px-4 py-3 rounded-md text-sm">

@@ -11,17 +11,20 @@ interface ProtectedRouteProps {
 
 export default function ProtectedRoute({ children, requireAdmin = false }: ProtectedRouteProps) {
   const router = useRouter()
-  const { isAuthenticated, isAdmin, loading } = useAuth()
+  const { isAuthenticated, isAdmin, loading, userRole } = useAuth()
 
   useEffect(() => {
     if (!loading) {
       if (!isAuthenticated) {
         router.push('/auth/login')
       } else if (requireAdmin && !isAdmin) {
-        router.push('/')
+        // Only redirect if we've actually determined the role (not null)
+        if (userRole !== null) {
+          router.push('/')
+        }
       }
     }
-  }, [isAuthenticated, isAdmin, loading, requireAdmin, router])
+  }, [isAuthenticated, isAdmin, loading, requireAdmin, router, userRole])
 
   if (loading) {
     return (
@@ -36,6 +39,18 @@ export default function ProtectedRoute({ children, requireAdmin = false }: Prote
 
   if (!isAuthenticated) {
     return null
+  }
+
+  // If admin is required and we're still determining the role, show loading
+  if (requireAdmin && userRole === null) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto mb-4"></div>
+          <p className="text-gray-600 dark:text-gray-400">Verifying permissions...</p>
+        </div>
+      </div>
+    )
   }
 
   if (requireAdmin && !isAdmin) {

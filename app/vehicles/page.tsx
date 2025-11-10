@@ -84,7 +84,7 @@ export default function VehiclesPage() {
 
         {showForm && (
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8 transition-colors">
-            <h2 className="text-xl font-bold mb-4 dark:text-white">Register New Vehicle</h2>
+            <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">Register New Vehicle</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid md:grid-cols-2 gap-4">
                 <div>

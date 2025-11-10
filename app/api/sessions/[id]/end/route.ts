@@ -84,6 +84,26 @@ export async function POST(
       throw error
     }
 
+    // Update port status back to Available
+    const { error: portUpdateError } = await supabase
+      .from('charging_port')
+      .update({ status: 'Available' })
+      .eq('port_id', session.port_id)
+
+    if (portUpdateError) {
+      console.error('Failed to update port status:', portUpdateError)
+      // Don't fail the entire request if port update fails
+    }
+
+    // Log the status change in port_status_log
+    await supabase
+      .from('port_status_log')
+      .insert({
+        port_id: session.port_id,
+        old_status: 'In Use',
+        new_status: 'Available'
+      })
+
     // Create payment record with default "Cash" payment method and "Completed" status
     // Amount will be the cost calculated by the trigger
     const cost = sessionData.cost || (energyConsumed * 15.0) // Fallback calculation

@@ -55,7 +55,7 @@ export default function PaymentsPage() {
 
         {/* Payment List */}
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 transition-colors">
-          <h2 className="text-xl font-semibold mb-6 dark:text-white">All Payments</h2>
+          <h2 className="text-xl font-semibold mb-6 text-gray-900 dark:text-white">All Payments</h2>
           <div className="space-y-4">
             {payments.map((payment: any) => (
               <div

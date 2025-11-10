@@ -147,7 +147,7 @@ export default function SessionsPage() {
         {/* Start New Session */}
         {!activeSession && (
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8 transition-colors">
-            <h2 className="text-xl font-semibold mb-4 dark:text-white">Start New Session</h2>
+            <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">Start New Session</h2>
             <a
               href="/stations"
               className="block text-center bg-primary-600 dark:bg-primary-500 text-white py-3 rounded-lg hover:bg-primary-700 dark:hover:bg-primary-600 transition font-semibold"
@@ -159,9 +159,10 @@ export default function SessionsPage() {
 
         {/* Session History */}
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 transition-colors">
-          <h2 className="text-xl font-semibold mb-6 dark:text-white">Session History</h2>
+          <h2 className="text-xl font-semibold mb-6 text-gray-900 dark:text-white">Session History</h2>
           <div className="space-y-4">
-            {sessions.map((session: any) => (
+            {sessions && sessions.length > 0 ? (
+              sessions.map((session: any) => (
               <div
                 key={session.session_id}
                 className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:border-primary-300 dark:hover:border-primary-600 transition"
@@ -210,15 +211,14 @@ export default function SessionsPage() {
                   )}
                 </div>
               </div>
-            ))}
+            ))
+            ) : (
+              <div className="text-center py-8">
+                <p className="text-gray-500 dark:text-gray-400">No charging sessions yet</p>
+                <p className="text-gray-400 dark:text-gray-500 text-sm">Start your first session to see it here</p>
+              </div>
+            )}
           </div>
-
-          {sessions.length === 0 && (
-            <div className="text-center py-8">
-              <p className="text-gray-500 dark:text-gray-400">No charging sessions yet</p>
-              <p className="text-gray-400 dark:text-gray-500 text-sm">Start your first session to see it here</p>
-            </div>
-          )}
         </div>
       </div>
     </div>

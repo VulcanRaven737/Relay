@@ -1,10 +1,31 @@
 import { NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
+import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
+import { cookies } from 'next/headers'
 
 // Uses calculateusertotalspending() DB function and various tables
 export async function GET() {
   try {
-    const userId = 1 // Replace with actual user ID from session
+    const supabase = createRouteHandlerClient({ cookies })
+    
+    // Get the authenticated user
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    
+    if (authError || !user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    // Get the user_id from user_account table by email
+    const { data: userAccount, error: userError } = await supabase
+      .from('user_account')
+      .select('user_id')
+      .eq('email', user.email!)
+      .single()
+
+    if (userError || !userAccount) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 })
+    }
+
+    const userId = (userAccount as any).user_id
 
     // Call DB function for total spending
     const { data: spendingData, error: spendingError } = await supabase

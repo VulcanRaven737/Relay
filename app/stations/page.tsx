@@ -20,6 +20,8 @@ export default function StationsPage() {
     connectorType: '',
     availability: 'all',
   })
+  const [showMyConnectorsOnly, setShowMyConnectorsOnly] = useState(true)
+  const [myConnectorTypes, setMyConnectorTypes] = useState<string[]>([])
   const [selectedStation, setSelectedStation] = useState<any>(null)
   const [selectedPort, setSelectedPort] = useState('')
   const [selectedVehicle, setSelectedVehicle] = useState('')
@@ -33,7 +35,7 @@ export default function StationsPage() {
 
   useEffect(() => {
     applyFiltersAndSearch()
-  }, [filters, searchQuery, userLocation, allStations, useGPSSort])
+  }, [filters, searchQuery, userLocation, allStations, useGPSSort, showMyConnectorsOnly, myConnectorTypes])
 
   const requestLocation = () => {
     if ('geolocation' in navigator) {
@@ -60,7 +62,12 @@ export default function StationsPage() {
       const response = await fetch('/api/vehicles')
       if (response.ok) {
         const data = await response.json()
-        setVehicles(Array.isArray(data) ? data : [])
+        const vehicleList = Array.isArray(data) ? data : []
+        setVehicles(vehicleList)
+        
+        // Extract unique connector types from all user vehicles
+        const connectorTypes = Array.from(new Set(vehicleList.map((v: any) => v.connectortype)))
+        setMyConnectorTypes(connectorTypes)
       }
     } catch (error) {
       console.error('Error fetching vehicles:', error)
@@ -131,7 +138,14 @@ export default function StationsPage() {
       setUseGPSSort(true) // Enable GPS sorting when not searching
     }
 
-    // Apply connector type filter
+    // Apply "My Connectors Only" filter - show stations with at least one matching connector
+    if (showMyConnectorsOnly && myConnectorTypes.length > 0) {
+      filteredStations = filteredStations.filter((station: any) => 
+        station.ports?.some((port: any) => myConnectorTypes.includes(port.connectortype))
+      )
+    }
+
+    // Apply manual connector type filter (takes precedence if set)
     if (filters.connectorType) {
       filteredStations = filteredStations.filter((station: any) => 
         station.ports?.some((port: any) => port.connectortype === filters.connectorType)
@@ -256,6 +270,43 @@ export default function StationsPage() {
           )}
         </div>
 
+        {/* My Vehicles Connector Filter */}
+        {myConnectorTypes.length > 0 && (
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 mb-6 transition-colors">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <div className="flex items-center">
+                  <input
+                    type="checkbox"
+                    id="myConnectorsOnly"
+                    checked={showMyConnectorsOnly}
+                    onChange={(e) => setShowMyConnectorsOnly(e.target.checked)}
+                    className="w-4 h-4 text-primary-600 bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded focus:ring-primary-500"
+                  />
+                  <label htmlFor="myConnectorsOnly" className="ml-2 text-sm font-medium text-gray-900 dark:text-white cursor-pointer">
+                    Show only stations compatible with my vehicles
+                  </label>
+                </div>
+              </div>
+              <div className="flex items-center space-x-2">
+                {myConnectorTypes.map((type: string) => (
+                  <span 
+                    key={type}
+                    className="px-3 py-1 bg-primary-100 dark:bg-primary-900 text-primary-800 dark:text-primary-200 text-xs font-semibold rounded-full"
+                  >
+                    {type}
+                  </span>
+                ))}
+              </div>
+            </div>
+            {showMyConnectorsOnly && (
+              <p className="mt-2 text-xs text-gray-600 dark:text-gray-400">
+                ✓ Showing stations with {myConnectorTypes.join(', ')} connectors
+              </p>
+            )}
+          </div>
+        )}
+
         {/* Location Status */}
         {locationError && (
           <div className="bg-yellow-100 dark:bg-yellow-900 border border-yellow-400 dark:border-yellow-700 text-yellow-800 dark:text-yellow-200 px-4 py-3 rounded-lg mb-6">
@@ -279,7 +330,7 @@ export default function StationsPage() {
 
         {/* Filters */}
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8 transition-colors">
-          <h2 className="text-lg font-semibold mb-4 dark:text-white">Filters</h2>
+          <h2 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">Filters</h2>
           <div className="grid md:grid-cols-3 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
@@ -364,18 +415,24 @@ export default function StationsPage() {
                 <div className="mb-4">
                   <p className="text-xs text-gray-600 dark:text-gray-400 mb-2">Charging Ports:</p>
                   <div className="space-y-1">
-                    {station.ports.map((port: any) => (
-                      <div key={port.port_id} className="flex justify-between text-xs">
-                        <span className="dark:text-gray-300">{port.connectortype} ({port.max_power_output}kW)</span>
-                        <span className={`px-2 py-1 rounded ${
-                          port.status === 'Available' ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200' :
-                          port.status === 'In-Use' ? 'bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200' :
-                          'bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200'
-                        }`}>
-                          {port.status}
-                        </span>
-                      </div>
-                    ))}
+                    {station.ports.map((port: any) => {
+                      const isCompatible = myConnectorTypes.includes(port.connectortype)
+                      return (
+                        <div key={port.port_id} className="flex justify-between items-center text-xs">
+                          <span className={`flex items-center ${isCompatible ? 'font-semibold dark:text-white' : 'dark:text-gray-300'}`}>
+                            {isCompatible && <span className="mr-1">✓</span>}
+                            {port.connectortype} ({port.max_power_output}kW)
+                          </span>
+                          <span className={`px-2 py-1 rounded ${
+                            port.status === 'Available' ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200' :
+                            port.status === 'In Use' ? 'bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200' :
+                            'bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200'
+                          }`}>
+                            {port.status}
+                          </span>
+                        </div>
+                      )
+                    })}
                   </div>
                 </div>
               )}
@@ -434,6 +491,11 @@ export default function StationsPage() {
             <div className="mb-4">
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Select Charging Port
+                {myConnectorTypes.length > 0 && (
+                  <span className="ml-2 text-xs text-gray-500 dark:text-gray-400">
+                    (✓ = Compatible with your vehicle{vehicles.length > 1 ? 's' : ''})
+                  </span>
+                )}
               </label>
               <select
                 value={selectedPort}
@@ -443,11 +505,14 @@ export default function StationsPage() {
                 <option value="">Choose a port...</option>
                 {selectedStation.ports
                   ?.filter((port: any) => port.status === 'Available')
-                  .map((port: any) => (
-                    <option key={port.port_id} value={port.port_id}>
-                      {port.connectortype} - {port.max_power_output}kW - ₹{port.cost_per_unit}/kWh
-                    </option>
-                  ))}
+                  .map((port: any) => {
+                    const isCompatible = myConnectorTypes.includes(port.connectortype)
+                    return (
+                      <option key={port.port_id} value={port.port_id}>
+                        {isCompatible ? '✓ ' : ''}{port.connectortype} - {port.max_power_output}kW - ₹15/kWh
+                      </option>
+                    )
+                  })}
               </select>
             </div>
 
@@ -464,7 +529,7 @@ export default function StationsPage() {
                 <option value="">Choose a vehicle...</option>
                 {vehicles.map((vehicle: any) => (
                   <option key={vehicle.vehicle_id} value={vehicle.vehicle_id}>
-                    {vehicle.no_plate} - {vehicle.maker_model}
+                    {vehicle.no_plate} - {vehicle.maker_model} ({vehicle.connectortype})
                   </option>
                 ))}
               </select>

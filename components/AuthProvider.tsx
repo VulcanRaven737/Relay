@@ -80,10 +80,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return
       }
 
-      // Check if email ends with @relay.admin (you can customize this logic)
+      // Check if email ends with @relay.admin or @relay.com (you can customize this logic)
       // Or add a separate 'role' column to your user_account table
       const userData = data as any
-      const isAdmin = userData?.email?.endsWith('@relay.admin') || userData?.email === 'admin@relay.com'
+      const isAdmin = userData?.email?.endsWith('@relay.admin') || 
+                      userData?.email?.endsWith('@relay.com') ||
+                      userData?.email === 'admin@relay.com'
       setUserRole(isAdmin ? 'admin' : 'user')
     } catch (error) {
       console.error('Error in fetchUserRole:', error)
@@ -113,11 +115,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const logout = async () => {
     try {
-      await supabase.auth.signOut()
+      const { error } = await supabase.auth.signOut()
+      if (error) {
+        console.error('Error logging out:', error)
+      }
+      // Explicitly clear state
       setUser(null)
       setUserRole(null)
     } catch (error) {
       console.error('Error logging out:', error)
+      // Still clear state even on error
+      setUser(null)
+      setUserRole(null)
     }
   }
 

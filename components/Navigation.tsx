@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname, useRouter } from 'next/navigation'
 import ThemeToggle from './ThemeToggle'
 import { useAuth } from './AuthProvider'
@@ -10,11 +11,17 @@ export default function Navigation() {
   const router = useRouter()
   const { isAuthenticated, isAdmin, logout, loading } = useAuth()
 
+  // Hide navigation on landing page (home) when not authenticated
+  if (pathname === '/' && !isAuthenticated && !loading) {
+    return null
+  }
+
   const isActive = (path: string) => pathname === path
 
   const handleLogout = async () => {
     await logout()
     router.push('/')
+    router.refresh() // Force refresh to update UI state
   }
 
   // Don't show navigation while loading
@@ -23,8 +30,9 @@ export default function Navigation() {
       <nav className="bg-white dark:bg-gray-800 shadow-md transition-colors">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16">
-            <Link href="/" className="text-2xl font-bold text-primary-600 dark:text-primary-400">
-              ⚡ Relay
+            <Link href="/" className="flex items-center space-x-2 text-2xl font-bold text-primary-600 dark:text-primary-400">
+              <Image src="/icon.jpg" alt="Relay Logo" width={32} height={32} className="rounded" />
+              <span>Relay</span>
             </Link>
             <div className="flex items-center space-x-4">
               <ThemeToggle />
@@ -41,8 +49,9 @@ export default function Navigation() {
       <nav className="bg-white dark:bg-gray-800 shadow-md transition-colors">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16">
-            <Link href="/" className="text-2xl font-bold text-primary-600 dark:text-primary-400">
-              ⚡ Relay
+            <Link href="/" className="flex items-center space-x-2 text-2xl font-bold text-primary-600 dark:text-primary-400">
+              <Image src="/icon.jpg" alt="Relay Logo" width={32} height={32} className="rounded" />
+              <span>Relay</span>
             </Link>
 
             <div className="flex items-center space-x-4">
@@ -71,41 +80,44 @@ export default function Navigation() {
     <nav className="bg-white dark:bg-gray-800 shadow-md transition-colors">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
-          <Link href="/" className="text-2xl font-bold text-primary-600 dark:text-primary-400">
-            ⚡ Relay
+          <Link href="/" className="flex items-center space-x-2 text-2xl font-bold text-primary-600 dark:text-primary-400">
+            <Image src="/icon.jpg" alt="Relay Logo" width={32} height={32} className="rounded" />
+            <span>Relay</span>
           </Link>
 
           <div className="hidden md:flex space-x-6">
-            <NavLink href="/stations" active={isActive('/stations')}>
-              Stations
-            </NavLink>
-            <NavLink href="/sessions" active={isActive('/sessions')}>
-              Sessions
-            </NavLink>
-            <NavLink href="/vehicles" active={isActive('/vehicles')}>
-              Vehicles
-            </NavLink>
-            <NavLink href="/payments" active={isActive('/payments')}>
-              Payments
-            </NavLink>
-            <NavLink href="/analytics" active={isActive('/analytics')}>
-              Analytics
-            </NavLink>
-            {isAdmin && (
+            {isAdmin ? (
+              // Admin users only see Admin Dashboard
               <NavLink href="/admin" active={isActive('/admin')}>
-                Admin
+                Admin Dashboard
               </NavLink>
+            ) : (
+              // Regular users see all user features
+              <>
+                <NavLink href="/stations" active={isActive('/stations')}>
+                  Stations
+                </NavLink>
+                <NavLink href="/sessions" active={isActive('/sessions')}>
+                  Sessions
+                </NavLink>
+                <NavLink href="/vehicles" active={isActive('/vehicles')}>
+                  Vehicles
+                </NavLink>
+                <NavLink href="/payments" active={isActive('/payments')}>
+                  Payments
+                </NavLink>
+                <NavLink href="/analytics" active={isActive('/analytics')}>
+                  Analytics
+                </NavLink>
+                <NavLink href="/reviews" active={isActive('/reviews')}>
+                  Reviews
+                </NavLink>
+              </>
             )}
           </div>
 
           <div className="flex items-center space-x-4">
             <ThemeToggle />
-            <Link
-              href="/reviews"
-              className="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition"
-            >
-              Reviews
-            </Link>
             <button
               onClick={handleLogout}
               className="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white px-4 py-2 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition"
