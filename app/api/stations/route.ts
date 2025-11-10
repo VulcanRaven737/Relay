@@ -53,7 +53,7 @@ export async function GET(request: Request) {
       .from('review')
       .select('station_id, rating')
 
-    const ratingMap: Record<number, number> = {}
+    const ratingMap: Record<number, number[]> = {}
     reviews?.forEach((r: any) => {
       if (!ratingMap[r.station_id]) ratingMap[r.station_id] = []
       ratingMap[r.station_id].push(r.rating)
