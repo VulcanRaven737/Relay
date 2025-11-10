@@ -9,11 +9,6 @@ export default function Footer() {
   const pathname = usePathname()
   const { isAuthenticated, loading } = useAuth()
 
-  // Hide footer on landing page (home) when not authenticated
-  if (pathname === '/' && !isAuthenticated && !loading) {
-    return null
-  }
-
   return (
     <footer className="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 transition-colors">
       <div className="container mx-auto px-4 py-8">

@@ -11,17 +11,17 @@ export default function Navigation() {
   const router = useRouter()
   const { isAuthenticated, isAdmin, logout, loading } = useAuth()
 
-  // Hide navigation on landing page (home) when not authenticated
-  if (pathname === '/' && !isAuthenticated && !loading) {
-    return null
-  }
-
   const isActive = (path: string) => pathname === path
 
   const handleLogout = async () => {
     await logout()
+    // Clear any client-side cache
     router.push('/')
-    router.refresh() // Force refresh to update UI state
+    router.refresh()
+    // Force a hard reload to clear all state
+    if (typeof window !== 'undefined') {
+      window.location.href = '/'
+    }
   }
 
   // Don't show navigation while loading

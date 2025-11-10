@@ -115,18 +115,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const logout = async () => {
     try {
+      // Sign out from Supabase (clears JWT tokens)
       const { error } = await supabase.auth.signOut()
       if (error) {
         console.error('Error logging out:', error)
       }
-      // Explicitly clear state
-      setUser(null)
-      setUserRole(null)
     } catch (error) {
       console.error('Error logging out:', error)
-      // Still clear state even on error
+    } finally {
+      // Always clear local state regardless of API success/failure
       setUser(null)
       setUserRole(null)
+      
+      // Clear any local storage items that might be cached
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('supabase.auth.token')
+        sessionStorage.clear()
+      }
     }
   }
 

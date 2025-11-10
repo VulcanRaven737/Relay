@@ -29,29 +29,19 @@ export default function Home() {
 // Marketing landing page for logged-out users
 function LandingView() {
   return (
-    <>
-      {/* Floating Theme Toggle */}
-      <div className="fixed bottom-6 right-6 z-50">
-        <div className="bg-white dark:bg-gray-800 p-3 rounded-full shadow-2xl border border-gray-200 dark:border-gray-700 hover:scale-110 transition-transform">
-          <ThemeToggle />
-        </div>
-      </div>
-
-      <div className="container mx-auto px-4 py-16">
-        <div className="max-w-7xl mx-auto">
+    <div className="container mx-auto px-4 py-12">
+      <div className="max-w-7xl mx-auto">
         {/* Hero Section */}
         <div className="text-center mb-20">
-          <div className="mb-8 flex items-center justify-center gap-4">
-          </div>
-          <div className="flex items-center justify-center gap-4 mb-8">
+          <div className="flex items-center justify-center gap-4 mb-12">
             <div className="bg-gradient-to-br from-yellow-400 to-yellow-500 p-4 rounded-2xl shadow-xl transform hover:scale-105 transition-transform">
               <Image src="/icon.jpg" alt="Relay Logo" width={80} height={80} className="rounded-lg" />
             </div>
-            <h1 className="text-6xl md:text-7xl font-bold bg-gradient-to-r from-primary-600 to-green-500 bg-clip-text text-transparent">
+            <h1 className="text-6xl md:text-8xl font-bold bg-gradient-to-r from-primary-400 to-green-400 bg-clip-text text-transparent leading-tight pb-2">
               Relay
             </h1>
           </div>
-          <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-12 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-xl md:text-3xl text-gray-600 dark:text-gray-300 mb-12 max-w-4xl mx-auto leading-relaxed">
             The future of EV charging is here. Find stations, manage sessions, and power your journey with ease.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -71,14 +61,14 @@ function LandingView() {
         </div>
 
         {/* Features Grid */}
-        <div className="mb-20">
-          <h2 className="text-4xl md:text-5xl font-bold text-center mb-4 text-gray-900 dark:text-white">
+        <div className="mb-16">
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-3 text-gray-900 dark:text-white">
             Why Choose Relay?
           </h2>
-          <p className="text-center text-gray-600 dark:text-gray-400 mb-16 text-lg max-w-2xl mx-auto">
+          <p className="text-center text-gray-600 dark:text-gray-400 mb-12 text-base max-w-2xl mx-auto">
             Everything you need to manage your electric vehicle charging experience
           </p>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             <FeatureHighlight
               icon="🗺️"
               title="Smart Station Discovery"
@@ -119,40 +109,39 @@ function LandingView() {
         </div>
 
         {/* Stats Section */}
-        <div className="bg-gradient-to-r from-primary-600 to-green-600 dark:from-primary-700 dark:to-green-700 rounded-3xl p-12 md:p-16 text-white mb-20 shadow-2xl">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">Trusted by Thousands</h2>
-          <div className="grid md:grid-cols-3 gap-12 text-center">
+        <div className="bg-gradient-to-r from-primary-600 to-green-600 dark:from-primary-700 dark:to-green-700 rounded-3xl p-10 md:p-12 text-white mb-16 shadow-2xl">
+          <h2 className="text-2xl md:text-3xl font-bold text-center mb-10">Trusted by Thousands</h2>
+          <div className="grid md:grid-cols-3 gap-10 text-center">
             <div className="transform hover:scale-110 transition-transform">
-              <div className="text-6xl font-bold mb-2">500+</div>
-              <div className="text-xl opacity-90">Charging Stations</div>
+              <div className="text-4xl md:text-5xl font-bold mb-2">500+</div>
+              <div className="text-base md:text-lg opacity-90">Charging Stations</div>
             </div>
             <div className="transform hover:scale-110 transition-transform">
-              <div className="text-6xl font-bold mb-2">10K+</div>
-              <div className="text-xl opacity-90">Active Users</div>
+              <div className="text-4xl md:text-5xl font-bold mb-2">10K+</div>
+              <div className="text-base md:text-lg opacity-90">Active Users</div>
             </div>
             <div className="transform hover:scale-110 transition-transform">
-              <div className="text-6xl font-bold mb-2">50K+</div>
-              <div className="text-xl opacity-90">Sessions Completed</div>
+              <div className="text-4xl md:text-5xl font-bold mb-2">50K+</div>
+              <div className="text-base md:text-lg opacity-90">Sessions Completed</div>
             </div>
           </div>
         </div>
 
         {/* CTA Section */}
-        <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl p-12 md:p-16 text-center border border-gray-200 dark:border-gray-700">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6 text-gray-900 dark:text-white">Ready to Get Started?</h2>
-          <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-10 max-w-2xl mx-auto">
+        <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl p-10 md:p-12 text-center border border-gray-200 dark:border-gray-700">
+          <h2 className="text-3xl md:text-4xl font-bold mb-5 text-gray-900 dark:text-white">Ready to Get Started?</h2>
+          <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-2xl mx-auto">
             Join thousands of EV drivers using Relay every day
           </p>
           <Link
             href="/auth/register"
-            className="inline-block bg-gradient-to-r from-primary-600 to-green-600 dark:from-primary-500 dark:to-green-500 text-white px-12 py-5 rounded-xl font-semibold text-xl hover:shadow-2xl transition-all transform hover:scale-105"
+            className="inline-block bg-gradient-to-r from-primary-600 to-green-600 dark:from-primary-500 dark:to-green-500 text-white px-10 py-4 rounded-xl font-semibold text-lg hover:shadow-2xl transition-all transform hover:scale-105"
           >
             Create Your Free Account →
           </Link>
         </div>
       </div>
     </div>
-    </>
   )
 }
 
@@ -302,12 +291,12 @@ function FeatureHighlight({
   gradient: string
 }) {
   return (
-    <div className="group bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all transform hover:-translate-y-2 border border-gray-100 dark:border-gray-700">
-      <div className={`bg-gradient-to-br ${gradient} w-16 h-16 rounded-xl flex items-center justify-center text-4xl mb-6 group-hover:scale-110 transition-transform shadow-md`}>
+    <div className="group bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all transform hover:-translate-y-2 border border-gray-100 dark:border-gray-700">
+      <div className={`bg-gradient-to-br ${gradient} w-14 h-14 rounded-xl flex items-center justify-center text-3xl mb-4 group-hover:scale-110 transition-transform shadow-md`}>
         {icon}
       </div>
-      <h3 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">{title}</h3>
-      <p className="text-gray-600 dark:text-gray-400 leading-relaxed">{description}</p>
+      <h3 className="text-xl font-bold mb-3 text-gray-900 dark:text-white">{title}</h3>
+      <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{description}</p>
     </div>
   )
 }
