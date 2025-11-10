@@ -68,15 +68,6 @@ export default function AnalyticsPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      {/* Aurora Background */}
-      <div className="fixed inset-0 w-full h-full opacity-40 -z-0 pointer-events:none">
-        <Aurora
-          colorStops={["#3A29FF", "#FF94B4", "#FF3232"]}
-          blend={0.5}
-          amplitude={0.1}
-          speed={0.5}
-        />
-      </div>
       <div className="max-w-7xl mx-auto">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">Analytics Dashboard</h1>
 
