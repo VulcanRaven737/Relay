@@ -3,6 +3,7 @@
 import { useState, useEffect, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
+import Aurora from '@/components/Aurora'
 import { calculateEstimatedChargeTime, calculateEstimatedCost, formatDuration, formatCurrency } from '@/lib/utils'
 import Fuse from 'fuse.js'
 
@@ -226,6 +227,15 @@ export default function StationsPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
+      {/* Aurora Background */}
+      <div className="fixed inset-0 w-full h-full opacity-40 -z-0 pointer-events:none">
+        <Aurora
+          colorStops={["#3A29FF", "#FF94B4", "#FF3232"]}
+          blend={0.5}
+          amplitude={1.0}
+          speed={0.5}
+        />
+      </div>
       <div className="max-w-7xl mx-auto">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">Charging Stations</h1>
 

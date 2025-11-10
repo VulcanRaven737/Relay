@@ -32,7 +32,7 @@ function LandingView() {
   return (
     <div className="relative overflow-hidden min-h-screen">
       {/* Aurora Background */}
-      <div className="fixed inset-0 w-full h-full opacity-40 -z-0">
+      <div className="fixed inset-0 w-full h-full opacity-50 -z-0">
         <Aurora
           colorStops={["#3A29FF", "#FF94B4", "#FF3232"]}
           blend={0.5}
@@ -211,6 +211,15 @@ function DashboardView() {
 
   return (
     <div className="container mx-auto px-4 py-8">
+      {/* Aurora Background */}
+      <div className="fixed inset-0 w-full h-full opacity-40 -z-0 pointer-events:none">
+        <Aurora
+          colorStops={["#3A29FF", "#FF94B4", "#FF3232"]}
+          blend={0.5}
+          amplitude={1.0}
+          speed={0.5}
+        />
+      </div>
       <div className="max-w-7xl mx-auto">
         {/* Welcome Header */}
         <div className="mb-8">

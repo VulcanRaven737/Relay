@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { formatDateTime, formatCurrency } from '@/lib/utils'
+import Aurora from '@/components/Aurora'
 import ProtectedRoute from '@/components/ProtectedRoute'
 
 // Admin Dashboard - uses all tables, especially maintenance_log
@@ -197,9 +198,17 @@ function AdminPageContent() {
 
   return (
     <div className="container mx-auto px-4 py-8">
+      {/* Aurora Background */}
+      <div className="fixed inset-0 w-full h-full opacity-40 pointer-events-none">
+        <Aurora
+          colorStops={["#3A29FF", "#FF94B4", "#FF3232"]}
+          blend={0.5}
+          amplitude={1.0}
+          speed={0.5}
+        />
+      </div>      
       <div className="max-w-7xl mx-auto">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">Overview</h1>
-
         {/* Tabs */}
         <div className="flex space-x-4 mb-8 border-b border-gray-200 dark:border-gray-700">
                     {['overview', 'stations', 'maintenance', 'revenue', 'reviews'].map((tab) => (

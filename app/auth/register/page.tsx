@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
+import Aurora from '@/components/Aurora'
 
 export default function RegisterPage() {
   const router = useRouter()
@@ -90,6 +91,15 @@ export default function RegisterPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 py-12 px-4">
+      {/* Aurora Background */}
+      <div className="fixed inset-0 w-full h-full opacity-40 -z-0 pointer-events:none">
+        <Aurora
+          colorStops={["#3A29FF", "#FF94B4", "#FF3232"]}
+          blend={0.5}
+          amplitude={1.0}
+          speed={0.5}
+        />
+      </div>
       <div className="max-w-md w-full space-y-8 bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md transition-colors">
         <div>
           <h2 className="text-center text-3xl font-bold text-gray-900 dark:text-white">
