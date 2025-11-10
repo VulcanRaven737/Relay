@@ -29,7 +29,7 @@ export default function RootLayout({
         <ThemeProvider>
           <AuthProvider>
             <Navigation />
-            <main className="min-h-screen bg-gray-50 dark:bg-gray-900">
+            <main className="min-h-screen bg-gray-50 dark:bg-gray-900 pt-24">
               {children}
             </main>
             <Footer />

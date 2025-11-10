@@ -27,8 +27,8 @@ export default function Navigation() {
   // Don't show navigation while loading
   if (loading) {
     return (
-      <nav className="bg-white dark:bg-gray-800 shadow-md transition-colors">
-        <div className="container mx-auto px-4">
+      <nav className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-7xl bg-white/90 dark:bg-gray-800/90 backdrop-blur-md shadow-lg rounded-2xl transition-colors">
+        <div className="px-6">
           <div className="flex items-center justify-between h-16">
             <Link href="/" className="flex items-center space-x-2 text-2xl font-bold text-primary-600 dark:text-primary-400">
               <Image src="/icon.jpg" alt="Relay Logo" width={32} height={32} className="rounded" />
@@ -46,8 +46,8 @@ export default function Navigation() {
   // Not authenticated - show minimal nav
   if (!isAuthenticated) {
     return (
-      <nav className="bg-white dark:bg-gray-800 shadow-md transition-colors">
-        <div className="container mx-auto px-4">
+      <nav className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-7xl bg-white/90 dark:bg-gray-800/90 backdrop-blur shadow-lg rounded-2xl transition-colors">
+        <div className="px-6">
           <div className="flex items-center justify-between h-16">
             <Link href="/" className="flex items-center space-x-2 text-2xl font-bold text-primary-600 dark:text-primary-400">
               <Image src="/icon.jpg" alt="Relay Logo" width={32} height={32} className="rounded" />
@@ -77,8 +77,8 @@ export default function Navigation() {
 
   // Authenticated - show full nav with role-based items
   return (
-    <nav className="bg-white dark:bg-gray-800 shadow-md transition-colors">
-      <div className="container mx-auto px-4">
+    <nav className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-7xl bg-white/90 dark:bg-gray-800/90 backdrop-blur-md shadow-lg rounded-2xl transition-colors">
+      <div className="px-6">
         <div className="flex items-center justify-between h-16">
           <Link href="/" className="flex items-center space-x-2 text-2xl font-bold text-primary-600 dark:text-primary-400">
             <Image src="/icon.jpg" alt="Relay Logo" width={32} height={32} className="rounded" />

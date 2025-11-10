@@ -5,6 +5,7 @@ import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/components/AuthProvider'
 import ThemeToggle from '@/components/ThemeToggle'
+import Aurora from '@/components/Aurora'
 import { useEffect, useState } from 'react'
 
 export default function Home() {
@@ -29,8 +30,20 @@ export default function Home() {
 // Marketing landing page for logged-out users
 function LandingView() {
   return (
-    <div className="container mx-auto px-4 py-12">
-      <div className="max-w-7xl mx-auto">
+    <div className="relative overflow-hidden min-h-screen">
+      {/* Aurora Background */}
+      <div className="fixed inset-0 w-full h-full opacity-40 -z-0">
+        <Aurora
+          colorStops={["#3A29FF", "#FF94B4", "#FF3232"]}
+          blend={0.5}
+          amplitude={1.0}
+          speed={0.5}
+        />
+      </div>
+
+      {/* Content */}
+      <div className="relative z-10 container mx-auto px-4 pt-32 pb-12">
+        <div className="max-w-7xl mx-auto">
         {/* Hero Section */}
         <div className="text-center mb-20">
           <div className="flex items-center justify-center gap-4 mb-12">
@@ -139,6 +152,7 @@ function LandingView() {
           >
             Create Your Free Account →
           </Link>
+        </div>
         </div>
       </div>
     </div>
